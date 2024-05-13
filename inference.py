@@ -19,7 +19,7 @@ if not os.path.exists('unwarping_output'):
 unwarping_output = os.path.join(os.getcwd(), 'unwarping_output')
 print(unwarping_output)
 
-def main(input_path, output_path):
+def main(input_path, output_path, cleanup):
     for image in os.listdir(input_path):
         try:
             if image == '.gitkeep':
@@ -35,7 +35,6 @@ def main(input_path, output_path):
 
             classes = ['pdf', 'photo']
 
-            h, w, _ = img.shape
             img_to_process = cv2.resize(img, (480, 480))
             img_to_process = cv2.cvtColor(img_to_process, cv2.COLOR_BGR2RGB)
 
@@ -72,6 +71,9 @@ def main(input_path, output_path):
 
                 unwarped_img = cv2.imread(unwarping_output + '/' + image.split(".")[0] + '_remap.png')
 
+                if cleanup:
+                    os.remove(unwarping_output + '/' + image.split(".")[0] + '_remap.png')
+
                 start_time = time.time()
 
                 rs_img = resizeAndPad(unwarped_img, (480, 480))
@@ -96,8 +98,8 @@ def main(input_path, output_path):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Inference script with input and output paths as arguments")
-    parser.add_argument("input_path", type=str, nargs='?', help="Path to the directory containing input images", default='/home/asus/stuDYING/IT/Thesis/from_server/image1')
-    parser.add_argument("output_path", type=str, nargs='?', help="Path to the directory where output images will be saved", default='/home/asus/stuDYING/IT/Thesis/preprocessing_pipeline/out_file/image1')
+    parser.add_argument("--input_path", type=str, nargs='?', help="Path to the directory containing input images", default='/home/asus/stuDYING/IT/Thesis/from_server/image1')
+    parser.add_argument("--output_path", type=str, nargs='?', help="Path to the directory where output images will be saved", default='/home/asus/stuDYING/IT/Thesis/preprocessing_pipeline/out_file/image1')
+    parser.add_argument("--cleanup", action='store_true', help="Delete the contents of the unwarping_output folder")
     args = parser.parse_args()
-    main(args.input_path, args.output_path)
-
+    main(args.input_path, args.output_path, args.cleanup)
