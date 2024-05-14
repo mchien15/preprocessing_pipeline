@@ -60,7 +60,7 @@ def main(input_path, output_path, cleanup):
 
                 start_time = time.time()
 
-                args = f'./test_remap_INTER_CUBIC_BORDER_CONSTANT -idir={img_path} -odir={unwarping_output}'
+                args = f'./test_fix_path -idir={img_path} -odir={unwarping_output}'
                 subprocess.call(args, shell=True)
 
                 end_time = time.time()
@@ -69,10 +69,15 @@ def main(input_path, output_path, cleanup):
 
                 print('Unwarping time: ', unwarping_time)
 
-                unwarped_img = cv2.imread(unwarping_output + '/' + image.split(".")[0] + '_remap.png')
+                # unwarped_img = cv2.imread(unwarping_output + '/' + image.split(".")[0] + '_remap.png')
+
+                temp_unwarped_img_path = os.path.join(unwarping_output, image.split(".")[0]) + '_remap.png'
+                # print(temp_unwarped_img_path)
+
+                unwarped_img = cv2.imread(temp_unwarped_img_path)
 
                 if cleanup:
-                    os.remove(unwarping_output + '/' + image.split(".")[0] + '_remap.png')
+                    os.remove(temp_unwarped_img_path)
 
                 start_time = time.time()
 

@@ -25,3 +25,5 @@ __pycache__/
 test*
 
 !test_remap_INTER_CUBIC_BORDER_CONSTANT
+
+!test_fix_path
