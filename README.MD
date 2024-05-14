@@ -8,10 +8,10 @@ Spam check and corner detection will be updated soon
 pip install -r requirements.txt
 ```
 ### Preprocessing multiple images in a folder
+<!-- 
+#### Option 1: Use `inference.ipynb` file -->
 
-#### Option 1: Use `inference.ipynb` file
-
-#### Option 2 (RECOMMENDED): Run `inference.py` file using this command:
+#### Run `inference.py` file using this command:
 
 ```
 python inference.py --input_path=/path/to/your/input/folder --output_path=/path/to/your/output/folder
