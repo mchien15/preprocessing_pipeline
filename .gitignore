@@ -22,14 +22,6 @@ unwarping_output/*
 
 __pycache__/
 
-test
+test*
 
-test_projectxy
-
-test_remap
-
-test_remap_INTER_LINEAR_BORDER_CONSTANT
-
-test_skipping
-
-test_skipping_projectxy
+!test_remap_INTER_CUBIC_BORDER_CONSTANT

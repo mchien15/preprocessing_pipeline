@@ -8,6 +8,6 @@ output_folder="$2"
 
 for image_path in "$image_folder"/*; do
     if [ -f "$image_path" ]; then
-        ./test -idir="$image_path" -odir="$output_folder"
+        ./test_remap_INTER_CUBIC_BORDER_CONSTANT -idir="$image_path" -odir="$output_folder"
     fi
 done
