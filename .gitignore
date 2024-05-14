@@ -30,4 +30,4 @@ test*
 
 !test.exe
 
-!inference.ipynb
+inference.ipynb
