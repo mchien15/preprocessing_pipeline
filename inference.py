@@ -60,7 +60,7 @@ def main(input_path, output_path, cleanup):
 
                 start_time = time.time()
 
-                args = f'./test -idir={img_path} -odir={unwarping_output}'
+                args = f'./test_remap_INTER_CUBIC_BORDER_CONSTANT -idir={img_path} -odir={unwarping_output}'
                 subprocess.call(args, shell=True)
 
                 end_time = time.time()

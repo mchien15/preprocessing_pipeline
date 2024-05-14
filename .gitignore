@@ -21,3 +21,15 @@ unwarping_output/*
 !unwarping_output/.gitkeep
 
 __pycache__/
+
+test
+
+test_projectxy
+
+test_remap
+
+test_remap_INTER_LINEAR_BORDER_CONSTANT
+
+test_skipping
+
+test_skipping_projectxy
