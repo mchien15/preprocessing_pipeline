@@ -116,8 +116,8 @@ def main(input_path, output_path, cleanup):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Inference script with input and output paths as arguments")
-    parser.add_argument("--input_path", type=str, nargs='?', help="Path to the directory containing input images", default='/home/asus/stuDYING/IT/Thesis/from_server/image1')
-    parser.add_argument("--output_path", type=str, nargs='?', help="Path to the directory where output images will be saved", default='/home/asus/stuDYING/IT/Thesis/preprocessing_pipeline/out_file/image1')
+    parser.add_argument("--input_path", type=str, nargs='?', help="Path to the directory containing input images", default='example_input')
+    parser.add_argument("--output_path", type=str, nargs='?', help="Path to the directory where output images will be saved", default='example_output')
     parser.add_argument("--cleanup", action='store_true', help="Delete the contents of the unwarping_output folder")
     args = parser.parse_args()
     main(args.input_path, args.output_path, args.cleanup)

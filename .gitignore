@@ -31,3 +31,6 @@ test*
 !test.exe
 
 inference.ipynb
+
+example_output/*
+!example_output/.gitkeep
