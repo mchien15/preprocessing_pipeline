@@ -57,17 +57,30 @@ def main(input_path, output_path, cleanup):
                 print('-' * 50)
                 continue
             else:
+                # check if current OS is Windows
+                if os.name == 'nt':
+                    start_time = time.time()
+                    if os.access(os.path.abspath("test.exe"), os.X_OK) == False:
+                        print('test.exe is not executable')
+                    args = f'{os.path.abspath("test.exe")} -idir={img_path} -odir={unwarping_output}'
+                    subprocess.call(args, shell=True)
 
-                start_time = time.time()
+                    end_time = time.time()
 
-                args = f'./test_fix_path -idir={img_path} -odir={unwarping_output}'
-                subprocess.call(args, shell=True)
+                    unwarping_time = end_time - start_time
 
-                end_time = time.time()
+                    print('Unwarping time: ', unwarping_time)
+                else:
+                    start_time = time.time()
 
-                unwarping_time = end_time - start_time
+                    args = f'./test_fix_path -idir={img_path} -odir={unwarping_output}'
+                    subprocess.call(args, shell=True)
 
-                print('Unwarping time: ', unwarping_time)
+                    end_time = time.time()
+
+                    unwarping_time = end_time - start_time
+
+                    print('Unwarping time: ', unwarping_time)
 
                 # unwarped_img = cv2.imread(unwarping_output + '/' + image.split(".")[0] + '_remap.png')
 
