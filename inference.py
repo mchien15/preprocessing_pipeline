@@ -1,4 +1,4 @@
-import tensorflow as tf
+import onnxruntime as ort
 import cv2
 import numpy as np
 import os
@@ -7,9 +7,15 @@ import subprocess
 import argparse
 from utils import rotate_small_angle, resizeAndPad
 
-pdf_photo_model = tf.saved_model.load('pdf_vs_photo_v1/exported_pdf_vs_photo')
+pdf_photo_model = ort.InferenceSession('pdf_photo.onnx')
+pdf_photo_model_input_name = pdf_photo_model.get_inputs()[0].name
+pdf_photo_model_output_name = pdf_photo_model.get_outputs()[0].name
+print(pdf_photo_model_input_name, pdf_photo_model_output_name)
 
-sar_model = tf.saved_model.load('small_rotation_v4/epoch-5-small-rotation/exported_small_rotation')
+sar_model = ort.InferenceSession('sar.onnx')
+sar_model_input_name = sar_model.get_inputs()[0].name
+sar_model_output_name = sar_model.get_outputs()[0].name
+print(sar_model_input_name, sar_model_output_name)
 
 if not os.path.exists('unwarping_output'):
     os.makedirs('unwarping_output')
@@ -38,9 +44,7 @@ def main(input_path, output_path, cleanup):
             img_to_process = cv2.resize(img, (480, 480))
             img_to_process = cv2.cvtColor(img_to_process, cv2.COLOR_BGR2RGB)
 
-            input_tensor = tf.convert_to_tensor(np.array([img_to_process]), dtype=tf.float32)
-
-            result = pdf_photo_model.signatures['serving_default'](input_tensor)['dense_1'][0]
+            result = pdf_photo_model.run([pdf_photo_model_output_name], {pdf_photo_model_input_name: np.array([img_to_process], dtype=np.float32)})
 
             print(result)
             print('Classified as class: ' + classes[np.argmax(result)])
@@ -73,7 +77,7 @@ def main(input_path, output_path, cleanup):
                 else:
                     start_time = time.time()
 
-                    args = f'./test_fix_path -idir={img_path} -odir={unwarping_output}'
+                    args = f'./test.exe -idir={img_path} -odir={unwarping_output}'
                     subprocess.call(args, shell=True)
 
                     end_time = time.time()
@@ -98,9 +102,7 @@ def main(input_path, output_path, cleanup):
                 rs_img = cv2.cvtColor(rs_img, cv2.COLOR_BGR2RGB)
                 rs_img = rs_img / 255.0
                 print(rs_img.shape)
-                input_tensor = tf.convert_to_tensor(np.array([rs_img]), dtype=tf.float32)
-
-                result = sar_model.signatures['serving_default'](input_tensor)['output_0'][0]
+                result = sar_model.run([sar_model_output_name], {sar_model_input_name: np.array([rs_img], dtype=np.float32)})
 
                 rotated = rotate_small_angle(unwarped_img, result[0])
 

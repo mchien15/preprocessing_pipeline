@@ -24,13 +24,27 @@ __pycache__/
 
 test*
 
-!test_remap_INTER_CUBIC_BORDER_CONSTANT
-
-!test_fix_path
+test
 
 !test.exe
+
+test_border_transparent.exe
 
 inference.ipynb
 
 example_output/*
 !example_output/.gitkeep
+
+debug*
+
+inference_tf.py
+
+unwarping_test.sh
+
+pdf_vs_photo_v1/*
+
+small_rotation_v4/*
+
+calculate_time.py
+
+unwarping_test.sh
