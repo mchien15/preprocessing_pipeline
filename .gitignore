@@ -48,3 +48,5 @@ small_rotation_v4/*
 calculate_time.py
 
 unwarping_test.sh
+
+out_file/*

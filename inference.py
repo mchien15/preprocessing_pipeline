@@ -7,15 +7,11 @@ import subprocess
 import argparse
 from utils import rotate_small_angle, resizeAndPad
 
-pdf_photo_model = ort.InferenceSession('pdf_photo.onnx')
-pdf_photo_model_input_name = pdf_photo_model.get_inputs()[0].name
-pdf_photo_model_output_name = pdf_photo_model.get_outputs()[0].name
-print(pdf_photo_model_input_name, pdf_photo_model_output_name)
+pdf_photo_model = ort.InferenceSession('model/pdf_photo.onnx')
+pdf_photo_model_input_name, pdf_photo_model_output_name = pdf_photo_model.get_inputs()[0].name, pdf_photo_model.get_outputs()[0].name
 
-sar_model = ort.InferenceSession('sar.onnx')
-sar_model_input_name = sar_model.get_inputs()[0].name
-sar_model_output_name = sar_model.get_outputs()[0].name
-print(sar_model_input_name, sar_model_output_name)
+sar_model = ort.InferenceSession('model/sar.onnx')
+sar_model_input_name, sar_model_output_name = sar_model.get_inputs()[0].name, sar_model.get_outputs()[0].name
 
 if not os.path.exists('unwarping_output'):
     os.makedirs('unwarping_output')
@@ -23,9 +19,13 @@ if not os.path.exists('unwarping_output'):
     open('unwarping_output/.gitkeep', 'a').close()
 
 unwarping_output = os.path.join(os.getcwd(), 'unwarping_output')
-print(unwarping_output)
 
 def main(input_path, output_path, cleanup):
+
+    if not os.path.exists(output_path):
+        print('Creating output directory: ' + output_path)
+        os.makedirs(output_path)
+
     for image in os.listdir(input_path):
         try:
             if image == '.gitkeep':
@@ -46,7 +46,6 @@ def main(input_path, output_path, cleanup):
 
             result = pdf_photo_model.run([pdf_photo_model_output_name], {pdf_photo_model_input_name: np.array([img_to_process], dtype=np.float32)})
 
-            print(result)
             print('Classified as class: ' + classes[np.argmax(result)])
 
             end_time = time.time()
@@ -86,8 +85,6 @@ def main(input_path, output_path, cleanup):
 
                     print('Unwarping time: ', unwarping_time)
 
-                # unwarped_img = cv2.imread(unwarping_output + '/' + image.split(".")[0] + '_remap.png')
-
                 temp_unwarped_img_path = os.path.join(unwarping_output, image.split(".")[0]) + '_remap.png'
                 # print(temp_unwarped_img_path)
 
@@ -101,7 +98,6 @@ def main(input_path, output_path, cleanup):
                 rs_img = resizeAndPad(unwarped_img, (480, 480))
                 rs_img = cv2.cvtColor(rs_img, cv2.COLOR_BGR2RGB)
                 rs_img = rs_img / 255.0
-                print(rs_img.shape)
                 result = sar_model.run([sar_model_output_name], {sar_model_input_name: np.array([rs_img], dtype=np.float32)})
 
                 rotated = rotate_small_angle(unwarped_img, result[0])
